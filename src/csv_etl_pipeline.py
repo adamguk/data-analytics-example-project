@@ -1,6 +1,7 @@
 from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
+from functions.snowflake_utils import load_data_to_snowflake
 # ======================= HEADER =======================  
 
 # ======================= SOURCE FILE ======================= 
@@ -64,38 +65,7 @@ df_sales['Revenue'] = df_sales['Price'] * df_sales['Quantity']
 # Add Reporting date to 1st of month
 df_sales['Date'] = pd.to_datetime(df_sales['Date'],dayfirst=True)
 df_sales['Reporting Date'] = df_sales['Date'].dt.to_period('M').dt.to_timestamp()
-print('First Sale Date:')
-print(min(df_sales['Date']))
-print('Last Sale Date:')
-print(max(df_sales['Date']))
 
-
-#region ======================= FIRST DAY FINISH ======================= 
-#Finish my first day coding with a simple graph to feel achieved
-
-category_totals = df_sales.groupby('Category')['Revenue'].sum().reset_index()
-category_totals = category_totals.sort_values('Revenue',ascending=False)
-plt.figure(figsize=(12, 4))
-plt.bar(category_totals['Category'], category_totals['Revenue'])
-plt.xlabel('Category')
-plt.ylabel('Total Revenue')
-plt.title('Total Revenue by Category')
-plt.show()
-
-date_totals = df_sales.groupby('Reporting Date')['Revenue'].sum().reset_index()
-date_totals = date_totals.sort_values('Reporting Date',ascending=False)
-plt.figure(figsize=(6, 4))
-plt.bar(date_totals['Reporting Date'], date_totals['Revenue'])
-plt.xlabel('Reporting Date')
-plt.ylabel('Total Revenue')
-plt.title('Total Revenue by Reporting Date')
-plt.show()
-
-#endregion
-
-
-
-
-# TODO: View distinct list of Products
+load_data_to_snowflake(df_sales, "FACT_SALES")
 
 

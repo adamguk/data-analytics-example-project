@@ -3,6 +3,9 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Env and Cred Stores
+.env
+
 # C extensions
 *.so
 
